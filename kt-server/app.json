@@ -1,0 +1,11 @@
+{
+	"name": "kt-server",
+	"description": "acts as a server for kt-client",
+	"buildpacks": [
+		{
+			"url": "heroku/go"
+		}
+	],
+	"image": "heroku/go:1.6",
+	"mount_dir": "src/github.com/heroku/go-getting-started"
+}
