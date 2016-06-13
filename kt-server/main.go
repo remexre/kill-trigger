@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/remexre/kill-trigger"
@@ -47,13 +48,21 @@ func sendHandler(c *gin.Context) {
 
 func handler(ws *websocket.Conn) {
 	ch := chm.NewChan()
-	for b := range ch {
-		_, err := ws.Write([]byte{b})
-		if err != nil {
-			log.Println(err)
-			break
+	ticker := time.NewTicker(5 * time.Second)
+	stop := false
+	for !stop {
+		select {
+		case b := <-ch:
+			_, err := ws.Write([]byte{b})
+			if err != nil {
+				log.Println(err)
+				stop = true
+			}
+		case <-ticker.C:
+			ch <- kt.KeepAlive.ID
 		}
 	}
+	ticker.Stop()
 	chm.Delete(ch)
 	ws.Close()
 }
