@@ -20,11 +20,11 @@ const index = `<!DOCTYPE html>
 				allButtons(b => b.disabled = true);
 
 				const id = event.target.id;
-				console.log("Clicked ", id);
+				console.log("Clicked", id);
 
 				const xhr = new XMLHttpRequest();
 				xhr.addEventListener("load", function() {
-					console.log(this);
+					console.log(this.statusText);
 					allButtons(b => b.disabled = false);
 				});
 				xhr.open("POST", "/api/" + id + "/send");

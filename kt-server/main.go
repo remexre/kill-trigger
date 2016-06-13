@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/remexre/kill-trigger"
@@ -35,7 +36,13 @@ func indexHandler(c *gin.Context) {
 }
 
 func sendHandler(c *gin.Context) {
-	c.Param("code")
+	codeStr := c.Param("code")
+	code, err := strconv.ParseUint(codeStr, 10, 8)
+	if err != nil {
+		c.AbortWithError(400, err)
+		return
+	}
+	chm.Send(byte(code))
 }
 
 func handler(ws *websocket.Conn) {
