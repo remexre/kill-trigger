@@ -8,11 +8,11 @@ import (
 
 const (
 	origin = "http://kill-trigger.herokuapp.com"
-	url    = "ws://kill-trigger.herokuapp.com/socket"
+	wsURL  = "ws://kill-trigger.herokuapp.com/socket"
 )
 
 func main() {
-	ws, err := websocket.Dial(url, "", origin)
+	ws, err := websocket.Dial(wsURL, "", origin)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -20,7 +20,7 @@ func main() {
 	ch := make(chan byte, 1)
 	go func(ch chan byte) {
 		for b := range ch {
-			process(b)
+			do(b)
 		}
 	}(ch)
 	for {
@@ -30,14 +30,5 @@ func main() {
 			log.Fatal(err)
 		}
 		ch <- buf[0]
-	}
-}
-
-func process(b byte) {
-	switch b {
-	case 0x00:
-		log.Println("Hello, world!")
-	default:
-		log.Printf("Unknown command: %d", b)
 	}
 }
