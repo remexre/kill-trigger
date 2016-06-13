@@ -2,5 +2,8 @@
 	"ImportPath": "github.com/remexre/kill-trigger",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
-	"Deps": []
+	"Deps": [],
+	"Packages": [
+		"github.com/remexre/kill-trigger/..."
+	]
 }
