@@ -2,8 +2,13 @@
 	"ImportPath": "github.com/remexre/kill-trigger",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
-	"Deps": [],
 	"Packages": [
-		"github.com/remexre/kill-trigger/..."
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "3f122ce3dbbe488b7e6a8bdb26f41edec852a40b"
+		}
 	]
 }
