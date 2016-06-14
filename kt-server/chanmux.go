@@ -35,6 +35,14 @@ func (chm *ChanMux) Delete(ch chan byte) {
 	close(ch)
 }
 
+// Len returns the number of open channels.
+func (chm *ChanMux) Len() int {
+	chm.lock.Lock()
+	defer chm.lock.Unlock()
+
+	return len(chm.chans)
+}
+
 // Send sends a byte through all channels.
 func (chm *ChanMux) Send(b byte) {
 	chm.lock.Lock()

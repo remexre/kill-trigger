@@ -23,6 +23,7 @@ func main() {
 	r.SetHTMLTemplate(html)
 
 	r.GET("/", indexHandler)
+	r.GET("/api/numUsers", numUsersHandler)
 	r.POST("/api/:code/send", sendHandler)
 	r.Any("/socket", gin.WrapH(websocket.Handler(handler)))
 
@@ -35,6 +36,10 @@ func indexHandler(c *gin.Context) {
 	c.HTML(200, "index.html", gin.H{
 		"commands": kt.Commands,
 	})
+}
+
+func numUsersHandler(c *gin.Context) {
+	c.String(200, "%d", chm.Len())
 }
 
 func sendHandler(c *gin.Context) {

@@ -16,6 +16,8 @@ const index = `<!DOCTYPE html>
 			<div>
 				<span>Last KeepAlive:</span>
 				<input id="lastKeepAlive"></input>
+				<span>Clients:</span>
+				<input id="clientCount"></input>
 			</div>
 		</div>
 		<pre id="console"></pre>
@@ -25,23 +27,33 @@ const index = `<!DOCTYPE html>
 					f(button);
 			};
 
+			const ajax = (method, url) => new Promise((resolve, reject) => {
+				const xhr = new XMLHttpRequest();
+				xhr.addEventListener("load", function() {
+					debugger;
+					resolve(this.response);
+				});
+				xhr.addEventListener("error", err => {
+					reject(err);
+				});
+				xhr.open(method, url);
+				xhr.send();
+			});
+
 			const clickListener = event => {
 				allButtons(b => b.disabled = true);
 
 				const id = event.target.id;
 				console.log("Clicked", id);
 
-				const xhr = new XMLHttpRequest();
-				xhr.addEventListener("load", function() {
-					console.log(this.statusText);
+				const url = "https://kill-trigger.herokuapp.com/api/" + id + "/send";
+				ajax("POST", url).then(() => {
+					console.log("OK");
 					allButtons(b => b.disabled = false);
-				});
-				xhr.addEventListener("error", err => {
+				}).catch(err => {
 					console.error(err);
 					allButtons(b => b.disabled = false);
 				});
-				xhr.open("POST", "https://kill-trigger.herokuapp.com/api/" + id + "/send");
-				xhr.send();
 			};
 			allButtons(b => b.addEventListener("click", clickListener));
 		</script>
@@ -82,6 +94,13 @@ const index = `<!DOCTYPE html>
 				const line = now() + "\t" + name + "(" + event.data + ")\n";
 				document.getElementById("console").textContent += line;
 			});
+		</script>
+		<script>
+			window.setInterval(() => {
+				ajax("GET", "https://kill-trigger.herokuapp.com/api/numUsers").then(num => {
+					document.getElementById("clientCount").value = num;
+				});
+			}, 1000);
 		</script>
 	</body>
 </html>`
