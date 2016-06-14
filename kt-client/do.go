@@ -7,6 +7,12 @@ import (
 )
 
 func do(b byte) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("Caught panic:", r)
+		}
+	}()
+
 	switch b {
 	case kt.KeepAlive.ID:
 		// Do nothing on keepalive.

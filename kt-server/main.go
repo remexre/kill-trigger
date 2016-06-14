@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"os"
@@ -53,7 +54,7 @@ func handler(ws *websocket.Conn) {
 	for !stop {
 		select {
 		case b := <-ch:
-			_, err := ws.Write([]byte{b})
+			_, err := fmt.Fprint(ws, b)
 			if err != nil {
 				log.Println(err)
 				stop = true

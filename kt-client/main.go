@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 
 	"golang.org/x/net/websocket"
 )
@@ -17,23 +18,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ch := make(chan byte, 1)
-	go func(ch chan byte) {
-		defer func() {
-			if r := recover(); r != nil {
-				log.Println("Caught panic:", r)
-			}
-		}()
-		for b := range ch {
-			do(b)
-		}
-	}(ch)
 	for {
-		buf := make([]byte, 1)
-		_, err = ws.Read(buf)
+		var codeStr string
+		err := websocket.Message.Receive(ws, &codeStr)
 		if err != nil {
 			log.Fatal(err)
 		}
-		ch <- buf[0]
+
+		code, err := strconv.ParseUint(codeStr, 10, 8)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		do(byte(code))
 	}
 }

@@ -10,6 +10,7 @@ const index = `<!DOCTYPE html>
 		{{ range .commands }}
 			<button id="{{.ID}}">{{.Name}}</button>
 		{{ end }}
+		<pre id="console"></pre>
 		<script>
 			const allButtons = f => {
 				for(const button of document.getElementsByTagName("button"))
@@ -31,6 +32,15 @@ const index = `<!DOCTYPE html>
 				xhr.send();
 			};
 			allButtons(b => b.addEventListener("click", clickListener));
+		</script>
+		<script>
+			const commandNames = {{ .commands }};
+			const ws = new WebSocket("wss://kill-trigger.herokuapp.com/socket");
+			ws.binaryType = "arraybuffer";
+			ws.addEventListener("message", event => {
+				console.log("message", event);
+				window.lastEventData = event.data;
+			});
 		</script>
 	</body>
 </html>`
