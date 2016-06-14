@@ -10,6 +10,10 @@ const index = `<!DOCTYPE html>
 		{{ range .commands }}
 			<button id="{{.ID}}">{{.Name}}</button>
 		{{ end }}
+		<div>
+			<span>Last KeepAlive:</span>
+			<input id="lastKeepAlive"></input>
+		</div>
 		<pre id="console"></pre>
 		<script>
 			const allButtons = f => {
@@ -40,6 +44,18 @@ const index = `<!DOCTYPE html>
 				if(str.length > num) return str;
 				return new Array(num - str.length).join("0") + str;
 			};
+			const now = () => {
+				const date = new Date();
+				return [
+					[date.getFullYear(), 4],
+					[date.getMonth(),    2],
+					[date.getDate(),     2],
+				].map(leftPadder).join("-") + " " + [
+					[date.getHours(),   2],
+					[date.getMinutes(), 2],
+					[date.getSeconds(), 2],
+				].map(leftPadder).join(":");
+			}
 
 			const commands = {{ .commands }};
 			const ws = new WebSocket("wss://kill-trigger.herokuapp.com/socket");
@@ -48,18 +64,14 @@ const index = `<!DOCTYPE html>
 				const cmds = commands.filter(cmd => cmd.ID == Number.parseInt(event.data));
 				let name = "unknown";
 				if(cmds.length > 0) {
+					if(cmds[0].ID === 0) {
+						document.getElementById("lastKeepAlive").value = now();
+						return;
+					}
+
 					name = cmds[0].Name;
 				}
-				const now = new Date();
-				const line = [
-					[now.getFullYear(), 4],
-					[now.getMonth(),    2],
-					[now.getDate(),     2],
-				].map(leftPadder).join("-") + " " + [
-					[now.getHours(),   2],
-					[now.getMinutes(), 2],
-					[now.getSeconds(), 2],
-				].map(leftPadder).join(":") + "\t" + name + "(" + event.data + ")\n";
+				const line = now() + "\t" + name + "(" + event.data + ")\n";
 				document.getElementById("console").textContent += line;
 			});
 		</script>
