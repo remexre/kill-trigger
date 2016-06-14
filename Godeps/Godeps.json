@@ -3,13 +3,9 @@
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
 	"Packages": [
-		"./..."
+		"github.com/remexre/kill-trigger/kt-server"
 	],
 	"Deps": [
-		{
-			"ImportPath": "github.com/StackExchange/wmi",
-			"Rev": "f3e2bae1e0cb5aef83e319133eabfee30013a4a5"
-		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
 			"Comment": "v1.0rc1-268-gf931d1e",
@@ -26,56 +22,12 @@
 			"Rev": "f931d1ea80ae95a6fc739213cdd9399bd2967fb6"
 		},
 		{
-			"ImportPath": "github.com/go-ole/go-ole",
-			"Comment": "v1.2.0-10-g572eabb",
-			"Rev": "572eabb84c424e76a0d39d31510dd7dfd62f70b2"
-		},
-		{
-			"ImportPath": "github.com/go-ole/go-ole/oleutil",
-			"Comment": "v1.2.0-10-g572eabb",
-			"Rev": "572eabb84c424e76a0d39d31510dd7dfd62f70b2"
-		},
-		{
 			"ImportPath": "github.com/golang/protobuf/proto",
 			"Rev": "8616e8ee5e20a1704615e6c8d7afcdac06087a67"
 		},
 		{
 			"ImportPath": "github.com/manucorporat/sse",
 			"Rev": "ee05b128a739a0fb76c7ebd3ae4810c1de808d6d"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/cpu",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/host",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/internal/common",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/mem",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/net",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/gopsutil/process",
-			"Comment": "v2.0.0-50-g93e9068",
-			"Rev": "93e9068485233c5abe7e25c11b651e0f8eb6da31"
-		},
-		{
-			"ImportPath": "github.com/shirou/w32",
-			"Rev": "3c9377fc6748f222729a8270fe2775d149a249ad"
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
