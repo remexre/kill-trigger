@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"regexp"
 	"sort"
 
@@ -48,7 +49,8 @@ func killJava() {
 
 		name, err := proc.Name()
 		if err != nil {
-			log.Panic(err)
+			log.Println(err)
+			continue
 		}
 
 		if javaRegexp.MatchString(name) {
@@ -64,7 +66,11 @@ func killJava() {
 
 	log.Println("procs:", procs)
 	log.Println("Killing top memory user:", procs[0])
-	if err := procs[0].Kill(); err != nil {
-		log.Println(err)
+	osProc, err := os.FindProcess(int(procs[0].Pid))
+	if err != nil {
+		log.Panic(err)
+	}
+	if err = osProc.Kill(); err != nil {
+		log.Panic(err)
 	}
 }
