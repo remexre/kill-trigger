@@ -12,8 +12,8 @@ func do(b byte) {
 		// Do nothing on keepalive.
 	case kt.HelloWorld.ID:
 		log.Println("Hello, world!")
-	case kt.KillJavaw.ID:
-		killJavaw()
+	case kt.KillJava.ID:
+		killJava()
 	case kt.Ping.ID:
 		ping()
 	case kt.Pong.ID:

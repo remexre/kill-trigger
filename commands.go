@@ -10,7 +10,7 @@ type Command struct {
 var (
 	KeepAlive  = Command{"KeepAlive", 0x00}
 	HelloWorld = Command{"HelloWorld", 0x01}
-	KillJavaw  = Command{"KillJavaw", 0x02}
+	KillJava   = Command{"KillJava", 0x02}
 
 	Ping = Command{"Ping", 0xFE}
 	Pong = Command{"Pong", 0xFF}
@@ -20,7 +20,7 @@ var (
 var Commands = []Command{
 	KeepAlive,
 	HelloWorld,
-	KillJavaw,
+	KillJava,
 
 	Ping,
 	Pong,

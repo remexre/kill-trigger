@@ -30,9 +30,9 @@ func (a byMemoryUsage) Less(i, j int) bool {
 	return iMU < jMU
 }
 
-func killJavaw() {
-	log.Println("=== killJavaw ===")
-	defer log.Println("=================")
+func killJava() {
+	log.Println("=== killJava ===")
+	defer log.Println("================")
 
 	pids, err := process.Pids()
 	if err != nil {
