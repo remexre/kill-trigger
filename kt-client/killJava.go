@@ -31,20 +31,20 @@ func (a byMemoryUsage) Less(i, j int) bool {
 	return iMU < jMU
 }
 
-func killJava() {
+func killJava() error {
 	log.Println("=== killJava ===")
 	defer log.Println("================")
 
 	pids, err := process.Pids()
 	if err != nil {
-		log.Panic(err)
+		return err
 	}
 
 	var procs []*process.Process
 	for _, pid := range pids {
 		proc, err := process.NewProcess(pid)
 		if err != nil {
-			log.Panic(err)
+			return err
 		}
 
 		name, err := proc.Name()
@@ -61,16 +61,17 @@ func killJava() {
 	sort.Sort(byMemoryUsage(procs))
 	log.Println("Found", len(procs), "Java processes.")
 	if len(procs) == 0 {
-		return
+		return nil
 	}
 
 	log.Println("procs:", procs)
 	log.Println("Killing top memory user:", procs[0])
 	osProc, err := os.FindProcess(int(procs[0].Pid))
 	if err != nil {
-		log.Panic(err)
+		return err
 	}
 	if err = osProc.Kill(); err != nil {
-		log.Panic(err)
+		return err
 	}
+	return nil
 }

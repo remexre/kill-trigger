@@ -6,25 +6,29 @@ import (
 	"github.com/remexre/kill-trigger"
 )
 
-func do(b byte) {
+func doNothing() error { return nil }
+
+var commandActions = map[byte]func() error{
+	kt.KeepAlive.ID:  doNothing,
+	kt.HelloWorld.ID: helloWorld,
+	kt.KillJava.ID:   killJava,
+	kt.Ping.ID:       ping,
+	kt.Pong.ID:       doNothing,
+}
+
+func do(b byte) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("Caught panic:", r)
+			log.Println("Caught panic in do:", r)
+			if e, ok := r.(error); ok {
+				err = e
+			}
 		}
 	}()
 
-	switch b {
-	case kt.KeepAlive.ID:
-		// Do nothing on keepalive.
-	case kt.HelloWorld.ID:
-		log.Println("Hello, world!")
-	case kt.KillJava.ID:
-		killJava()
-	case kt.Ping.ID:
-		ping()
-	case kt.Pong.ID:
-		log.Println(">>> got pong")
-	default:
-		log.Printf("Unknown command: %d", b)
+	f, ok := commandActions[b]
+	if !ok {
+		log.Panicf("Unknown command: %d", b)
 	}
+	return f()
 }

@@ -13,16 +13,22 @@ const (
 )
 
 func main() {
+	for {
+		log.Println(connect())
+	}
+}
+
+func connect() error {
 	ws, err := websocket.Dial(wsURL, "", origin)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	for {
 		var codeStr string
 		err := websocket.Message.Receive(ws, &codeStr)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		code, err := strconv.ParseUint(codeStr, 10, 8)
@@ -31,6 +37,9 @@ func main() {
 			continue
 		}
 
-		do(byte(code))
+		err = do(byte(code))
+		if err != nil {
+			return err
+		}
 	}
 }
