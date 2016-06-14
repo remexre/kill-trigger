@@ -6,15 +6,15 @@ import (
 	"net/http"
 )
 
-func ping() {
+func ping() error {
 	log.Println(">>> got ping")
 
 	res, err := http.Post(fmt.Sprintf("%s/api/255/send", origin), "", nil)
 	if err != nil {
-		log.Println(err)
+		return err
 	} else if err = res.Body.Close(); err != nil {
-		log.Println(err)
-	} else {
-		log.Println(">>> sent pong")
+		return err
 	}
+	log.Println(">>> sent pong")
+	return nil
 }
