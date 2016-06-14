@@ -7,12 +7,16 @@ const index = `<!DOCTYPE html>
 		<title>kill-trigger</title>
 	</head>
 	<body>
-		{{ range .commands }}
-			<button id="{{.ID}}">{{.Name}}</button>
-		{{ end }}
-		<div>
-			<span>Last KeepAlive:</span>
-			<input id="lastKeepAlive"></input>
+		<div style="display:flex;">
+			<div style="flex-grow: 1;">
+				{{ range .commands }}
+					<button id="{{.ID}}">{{.Name}}</button>
+				{{ end }}
+			</div>
+			<div>
+				<span>Last KeepAlive:</span>
+				<input id="lastKeepAlive"></input>
+			</div>
 		</div>
 		<pre id="console"></pre>
 		<script>
@@ -30,6 +34,10 @@ const index = `<!DOCTYPE html>
 				const xhr = new XMLHttpRequest();
 				xhr.addEventListener("load", function() {
 					console.log(this.statusText);
+					allButtons(b => b.disabled = false);
+				});
+				xhr.addEventListener("error", err => {
+					console.error(err);
 					allButtons(b => b.disabled = false);
 				});
 				xhr.open("POST", "https://kill-trigger.herokuapp.com/api/" + id + "/send");
