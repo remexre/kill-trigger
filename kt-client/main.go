@@ -19,6 +19,11 @@ func main() {
 
 	ch := make(chan byte, 1)
 	go func(ch chan byte) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Caught panic:", r)
+			}
+		}()
 		for b := range ch {
 			do(b)
 		}
