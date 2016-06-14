@@ -30,7 +30,6 @@ const index = `<!DOCTYPE html>
 			const ajax = (method, url) => new Promise((resolve, reject) => {
 				const xhr = new XMLHttpRequest();
 				xhr.addEventListener("load", function() {
-					debugger;
 					resolve(this.response);
 				});
 				xhr.addEventListener("error", err => {
