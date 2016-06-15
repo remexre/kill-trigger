@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>kill-trigger</title>
+		<style>
+		body, label, .hbar {
+			display: flex;
+		}
+		.hbar > * {
+			flex-grow: 1;
+		}
+		body > div, fieldset {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		}
+		fieldset > :not(legend) {
+			width: 100%;
+		}
+		input {
+			flex-grow: 1;
+			margin-left: 5px;
+		}
+		#status > pre {
+			border: 1px solid black;
+			flex-grow: 1;
+		}
+
+		.mono { font-family: monospace; }
+		</style>
+	</head>
+	<body>
+		<div id="commands">
+			<fieldset id="kill">
+				<legend>Kill a Process</legend>
+				<label>
+					Process Regex
+					<input class="mono" name="regex" value="javaw?(\.exe)?"></input>
+				</label>
+				<button>Kill</button>
+			</fieldset>
+			<fieldset id="agora">
+				<legend>Run Script</legend>
+				<label>Source Code</label>
+				<textarea class="mono" name="code" rows=10>
+fmt := import("fmt")
+
+fmt.Println("Hello, world!")
+
+return 0</textarea>
+				<div class="hbar">
+					<button>Run</button>
+					<button id="agora-test">Test</button>
+				</div>
+			</fieldset>
+			<fieldset id="ping">
+				<legend>Ping</legend>
+				<button>Ping</button>
+			</fieldset>
+		</div>
+		<div id="status">
+			<div>
+				<span>Last KeepAlive:</span>
+				<input id="lastKeepAlive"></input>
+				<span>Clients:</span>
+				<input id="clientCount"></input>
+			</div>
+			<pre id="console"></pre>
+			<pre id="agora-console"></pre>
+		</div>
+		<script src="agora.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>`

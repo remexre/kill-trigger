@@ -16,7 +16,10 @@ var chm = NewChanMux()
 func main() {
 	r := gin.Default()
 
-	r.LoadHTMLFiles("index.html")
+	r.LoadHTMLFiles("assets/index.html")
+	r.StaticFile("agora.js", "assets/agora.js")
+	r.StaticFile("agora.js.map", "assets/agora.js.map")
+	r.StaticFile("main.js", "assets/main.js")
 
 	r.GET("/", indexHandler)
 	r.GET("/api/numUsers", numUsersHandler)

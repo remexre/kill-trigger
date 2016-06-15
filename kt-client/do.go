@@ -6,7 +6,7 @@ import (
 
 var commandActions = map[string]func(map[string]string) error{
 	"keepalive": nil,
-	"agora":     agora,
+	"agora":     agoraHandler,
 	"kill":      kill,
 	"ping":      ping,
 	"pong":      nil,
