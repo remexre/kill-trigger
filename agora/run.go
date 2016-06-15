@@ -8,9 +8,12 @@ import (
 
 // Run runs agora code.
 func Run(code string) (interface{}, error) {
-	ctx := runtime.NewCtx(MapResolver{
+	r := NewAggregateResolver(MapResolver{
 		"code": code,
-	}, new(compiler.Compiler))
+	})
+	r.Add("pastebin", NewPastebinResolver())
+
+	ctx := runtime.NewCtx(r, new(compiler.Compiler))
 
 	ctx.RegisterNativeModule(new(stdlib.FilepathMod))
 	ctx.RegisterNativeModule(new(stdlib.FmtMod))
