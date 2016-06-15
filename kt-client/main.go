@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
-	"strconv"
 
 	"golang.org/x/net/websocket"
 )
 
 const (
-	origin = "http://kill-trigger.herokuapp.com"
-	wsURL  = "ws://kill-trigger.herokuapp.com/socket"
+	origin = "https://kill-trigger.herokuapp.com"
+	wsURL  = "wss://kill-trigger.herokuapp.com/socket"
 )
 
 func main() {
@@ -23,21 +23,17 @@ func connect() error {
 	if err != nil {
 		return err
 	}
+	defer ws.Close()
+	dec := json.NewDecoder(ws)
 
 	for {
-		var codeStr string
-		err := websocket.Message.Receive(ws, &codeStr)
+		var m map[string]string
+		err := dec.Decode(&m)
 		if err != nil {
 			return err
 		}
 
-		code, err := strconv.ParseUint(codeStr, 10, 8)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
-		err = do(byte(code))
+		err = do(m)
 		if err != nil {
 			return err
 		}

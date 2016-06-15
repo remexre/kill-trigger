@@ -4,20 +4,20 @@ import "sync"
 
 // A ChanMux multiplexes several channels.
 type ChanMux struct {
-	chans map[chan byte]struct{}
+	chans map[chan map[string]string]struct{}
 	lock  sync.Mutex
 }
 
 // NewChanMux creates a new ChanMux.
 func NewChanMux() *ChanMux {
 	return &ChanMux{
-		chans: make(map[chan byte]struct{}),
+		chans: make(map[chan map[string]string]struct{}),
 	}
 }
 
 // NewChan creates a new channel and adds it to the ChanMux.
-func (chm *ChanMux) NewChan() chan byte {
-	ch := make(chan byte, 1)
+func (chm *ChanMux) NewChan() chan map[string]string {
+	ch := make(chan map[string]string, 1)
 
 	chm.lock.Lock()
 	chm.chans[ch] = struct{}{}
@@ -27,7 +27,7 @@ func (chm *ChanMux) NewChan() chan byte {
 }
 
 // Delete removes a channel from the ChanMux.
-func (chm *ChanMux) Delete(ch chan byte) {
+func (chm *ChanMux) Delete(ch chan map[string]string) {
 	chm.lock.Lock()
 	delete(chm.chans, ch)
 	chm.lock.Unlock()
@@ -43,8 +43,8 @@ func (chm *ChanMux) Len() int {
 	return len(chm.chans)
 }
 
-// Send sends a byte through all channels.
-func (chm *ChanMux) Send(b byte) {
+// Send sends through all channels.
+func (chm *ChanMux) Send(b map[string]string) {
 	chm.lock.Lock()
 	for ch := range chm.chans {
 		// Non-blocking send

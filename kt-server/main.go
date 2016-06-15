@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
+	"encoding/json"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/remexre/kill-trigger"
 
 	"golang.org/x/net/websocket"
 )
@@ -19,12 +16,11 @@ var chm = NewChanMux()
 func main() {
 	r := gin.Default()
 
-	html := template.Must(template.New("index.html").Parse(index))
-	r.SetHTMLTemplate(html)
+	r.LoadHTMLFiles("index.html")
 
 	r.GET("/", indexHandler)
 	r.GET("/api/numUsers", numUsersHandler)
-	r.POST("/api/:code/send", sendHandler)
+	r.POST("/api/send", sendHandler)
 	r.Any("/socket", gin.WrapH(websocket.Handler(handler)))
 
 	if err := r.Run(":" + os.Getenv("PORT")); err != nil {
@@ -33,9 +29,7 @@ func main() {
 }
 
 func indexHandler(c *gin.Context) {
-	c.HTML(200, "index.html", gin.H{
-		"commands": kt.Commands,
-	})
+	c.HTML(200, "index.html", nil)
 }
 
 func numUsersHandler(c *gin.Context) {
@@ -43,29 +37,27 @@ func numUsersHandler(c *gin.Context) {
 }
 
 func sendHandler(c *gin.Context) {
-	codeStr := c.Param("code")
-	code, err := strconv.ParseUint(codeStr, 10, 8)
-	if err != nil {
-		c.AbortWithError(400, err)
-		return
-	}
-	chm.Send(byte(code))
+	var data map[string]string
+	c.BindJSON(&data)
+	chm.Send(data)
+	c.JSON(200, data)
 }
 
 func handler(ws *websocket.Conn) {
+	enc := json.NewEncoder(ws)
+
 	ch := chm.NewChan()
 	ticker := time.NewTicker(5 * time.Second)
 	stop := false
 	for !stop {
 		select {
-		case b := <-ch:
-			_, err := fmt.Fprint(ws, b)
-			if err != nil {
+		case val := <-ch:
+			if err := enc.Encode(val); err != nil {
 				log.Println(err)
 				stop = true
 			}
 		case <-ticker.C:
-			ch <- kt.KeepAlive.ID
+			ch <- map[string]string{"name": "keepalive"}
 		}
 	}
 	ticker.Stop()

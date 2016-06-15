@@ -2,21 +2,17 @@ package main
 
 import (
 	"log"
-
-	"github.com/remexre/kill-trigger"
 )
 
-func doNothing() error { return nil }
-
-var commandActions = map[byte]func() error{
-	kt.KeepAlive.ID:  doNothing,
-	kt.HelloWorld.ID: helloWorld,
-	kt.KillJava.ID:   killJava,
-	kt.Ping.ID:       ping,
-	kt.Pong.ID:       doNothing,
+var commandActions = map[string]func(map[string]string) error{
+	"keepalive": nil,
+	"agora":     agora,
+	"kill":      kill,
+	"ping":      ping,
+	"pong":      nil,
 }
 
-func do(b byte) (err error) {
+func do(m map[string]string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("Caught panic in do:", r)
@@ -26,9 +22,18 @@ func do(b byte) (err error) {
 		}
 	}()
 
-	f, ok := commandActions[b]
+	name, ok := m["name"]
 	if !ok {
-		log.Panicf("Unknown command: %d", b)
+		log.Panic("Invalid command", m)
 	}
-	return f()
+
+	f, ok := commandActions[name]
+	if !ok {
+		log.Panic("Unknown command", name)
+	}
+
+	if f == nil {
+		return nil
+	}
+	return f(m)
 }
