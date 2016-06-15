@@ -1,18 +1,30 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
+	"os"
 )
 
 func ping(m map[string]string) error {
 	log.Println(">>> got ping")
 
-	res, err := http.Post(fmt.Sprintf("%s/api/send", origin),
-		"application/json",
-		strings.NewReader(`{"name":"pong"}`))
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "unknown"
+	}
+
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.Encode(map[string]string{
+		"name": "pong",
+		"host": hostname,
+	})
+
+	res, err := http.Post(fmt.Sprintf("%s/api/send", origin), "application/json", buf)
 	if err != nil {
 		return err
 	} else if err = res.Body.Close(); err != nil {

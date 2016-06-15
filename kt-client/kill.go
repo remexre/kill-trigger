@@ -37,7 +37,7 @@ func kill(m map[string]string) error {
 		}
 	}
 
-	log.Println("Found", len(procs), "Java processes.")
+	log.Println("Found", len(procs), "matching processes.")
 	if len(procs) == 0 {
 		return nil
 	}
